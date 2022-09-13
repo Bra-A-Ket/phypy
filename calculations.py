@@ -1,22 +1,7 @@
 from imports import *
 
 def main():
-    """
-    theta, phi = sy.symbols("theta, phi", real=True)
-    R = sy.symbols("R", real=True)
-    matrix = np.array([
-        [R**2, 0],
-        [0, R**2*sy.sin(theta)**2]
-    ])
-    metric = Metric(matrix=matrix, t=theta, x=phi)
-    metric.ricci_scalar(retR=False)
-    print(metric.ricciscalar)
-    """
 
-
-    schwarzschild_metric = SchwarzschildMetric()
-    schwarzschild_metric.christoffel_symbols(retC=False, simplify=False)
-    print(schwarzschild_metric.c0)
     """
     t, x, y, z = sy.symbols("t x y z", real=True)
     N = sy.Function("N")(t, x, y, z)
@@ -36,6 +21,12 @@ def main():
     metric.christoffel_symbols(retC=False)
     print(metric.c0)
     """
+
+    metric = SchwarzschildMetric()
+    metric.covariant_partial()
+    metric.contravariant_partial()
+    print(metric.covariantpartial)
+    print(metric.contravariantpartial)
 
 if __name__ == "__main__":
     main()

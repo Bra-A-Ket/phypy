@@ -196,6 +196,60 @@ class Metric():
         if retR:
             return ricciscalar
 
+    def covariant_partial(self, retP=True):
+        """A general co-/contravariant derivative has the form
+        partial = a*partial_0 + b*partial_1 + c*partial_2 + d*partial_3
+        for some constants a,b,c,d. For the partial derivative with covariant index we simply get
+        partial_0 = a*partial_0 + b*partial_1 + c*partial_2 + d*partial_3 with a=1 and b=c=d=0. This simplification is not
+        true for the partial derivative with contravariant index! Thats why the format of the partial is in this case maybe
+        unnecessary difficult. The extra work will pay off in the next function 'contravariant_partial'.
+
+        format
+        ------
+        [partial_mu] = [
+            [1, 0, 0, 0],               <- mu=0
+            [0, 1, 0, 0],               <- mu=1
+            [0, 0, 1, 0],               <- mu=2
+            [0, 0, 0, 1]                <- mu=3
+        ]
+             ^  ^  ^  ^
+             |  |  |  |
+             a  b  c  d
+
+        parameter
+        ---------
+        retP : bool
+            if True the function will return the covariant partial
+
+        return
+        ------
+        covariantpartial : sympy matrix (if retP=True)
+        """
+
+        covariantpartial = sy.matrices.eye(self.dim)
+        self.covariantpartial = covariantpartial
+
+        if retP:
+            return covariantpartial
+
+    def contravariant_partial(self, retP=True):
+        """Using the format from covariant_partial, the contravariant partial is simply given by the inverse metric itself!
+
+        parameter
+        ---------
+        retP : bool
+            if True the function will return the contravariant partial
+
+        return
+        ------
+        contravariantpartial : sympy matrix (if retP=True)
+        """
+
+        contravariantpartial = self.inv_metric
+        self.contravariantpartial = contravariantpartial
+
+        if retP:
+            return contravariantpartial
 
 class MinkowskiMetric(Metric):
     def __init__(self):
