@@ -22,11 +22,5 @@ def main():
     print(metric.c0)
     """
 
-    metric = SchwarzschildMetric()
-    metric.covariant_partial()
-    metric.contravariant_partial()
-    print(metric.covariantpartial)
-    print(metric.contravariantpartial)
-
 if __name__ == "__main__":
     main()

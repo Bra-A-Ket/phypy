@@ -16,6 +16,7 @@ Given the covariant metric tensor the following objects can be calculated automa
 Predefined objects:
 - Minkowski metric
 - Schwarzschild metric
+- Friedmann-Robertson-Walker metric
 ## Requirements
 In order to make phypy work, one has to install some external packages.
 - numpy for obvious reasons
@@ -31,7 +32,7 @@ Feel free to use any python file, e.g. calculations.py, and make sure that you h
 ```python
 from imports import *
 ```
-### Example: Christoffel symbols of the Schwarzschild metric
+### Example 1: Christoffel symbols of the Schwarzschild metric
 ```python
 metric = SchwarzschildMetric()
 metric.christoffel_symbols(retC=False, simplify=True)
@@ -40,7 +41,7 @@ print(metric.c0)
 By setting retC=False the function christoffel_symbols doent return the Christoffel symbols, but assign them to the class.
 By simplify=True the sympy.simplify method will be used before assigning the Christoffel symbols to the class.
 metric.c0 is the Christoffel symbol Gamma^0_{ij} in a matrix-format.
-### Example: Define your own metric
+### Example 2: Define your own metric
 ```python
 t, x, y, z = sy.symbols("t x y z", real=True)
 matrix = np.array([
@@ -52,4 +53,10 @@ matrix = np.array([
 metric = Metric(matrix=matrix, t=t, x=x, y=y, z=z)
 metric.ricci_scalar(retR=False, simplify=True)
 print(metric.ricciscalar)
+```
+### Example 3: Ricci scalar of FRW metric
+```python
+metric = FRWMetric()
+ricciscalar = metric.ricci_scalar(retR=True, simplify=True)
+print(ricciscalar)
 ```

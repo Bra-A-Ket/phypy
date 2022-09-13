@@ -268,3 +268,17 @@ class SchwarzschildMetric(Metric):
             [0, 0, 0, -r**2*sy.sin(theta)**2]
         ])
         super(SchwarzschildMetric, self).__init__(matrix=matrix, t=t, x=r, y=theta, z=phi)
+
+
+class FRWMetric(Metric):
+    def __init__(self):
+        t, r, theta, phi, Rs = sy.symbols("t r theta phi Rs", real=True)
+        k = sy.symbols("k", real=True)
+        a = sy.Function("a", real=True)(t)
+        matrix = np.array([
+            [1, 0, 0, 0],
+            [0, -a**2/(1-k*r**2), 0, 0],
+            [0, 0, -a**2*r**2, 0],
+            [0, 0, 0, -a**2*r**2*sy.sin(theta)**2]
+        ])
+        super(FRWMetric, self).__init__(matrix=matrix, t=t, x=r, y=theta, z=phi)
