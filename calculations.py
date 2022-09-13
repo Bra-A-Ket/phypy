@@ -1,6 +1,7 @@
 from imports import *
 
 def main():
+    """
     theta, phi = sy.symbols("theta, phi", real=True)
     R = sy.symbols("R", real=True)
     matrix = np.array([
@@ -10,12 +11,14 @@ def main():
     metric = Metric(matrix=matrix, t=theta, x=phi)
     metric.ricci_scalar(retR=False)
     print(metric.ricciscalar)
-
     """
+
+
     schwarzschild_metric = SchwarzschildMetric()
     #schwarzschild_metric.christoffel_symbols(retC=False)
-    t = schwarzschild_metric.ricci_tensor()
-
+    schwarzschild_metric.ricci_scalar(retR=False)
+    print(schwarzschild_metric.riccitensor)
+    """
     t, x, y, z = sy.symbols("t x y z", real=True)
     N = sy.Function("N")(t, x, y, z)
     G11 = sy.Function("G11")(t, x, y, z)

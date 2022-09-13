@@ -118,7 +118,7 @@ class Metric():
         if retC:
             return [symbol for symbol in all_symbols]
 
-    def ricci_tensor(self, retR=True):
+    def ricci_tensor(self, retR=True, simplify=True):
         """Calculation of the Ricci tensor
 
         parameter
@@ -149,12 +149,15 @@ class Metric():
                         riccitensor[a, c] += self.cs[e][a, c] * self.cs[d][d, e]
                         riccitensor[a, c] -= self.cs[e][a, d] * self.cs[d][c, e]
 
+        if simplify:
+            riccitensor = sy.simplify(riccitensor)
+
         self.riccitensor = riccitensor
 
         if retR:
             return riccitensor
 
-    def ricci_scalar(self, retR=True):
+    def ricci_scalar(self, retR=True, simplify=True):
         """Calculation of the Ricci scalar
 
         parameter
@@ -167,7 +170,7 @@ class Metric():
         ricciscalar : scalar (if retR=True)
             Ricci scalar in sympy matrix format
         """
-        
+
         # Check whether Ricci tensor exists
         try:
             self.riccitensor
@@ -179,6 +182,9 @@ class Metric():
         contraction = self.inv_metric * self.riccitensor
         for i in range(self.dim):
             ricciscalar += contraction[i, i]
+
+        if simplify:
+            ricciscalar = sy.simplify(ricciscalar)
 
         self.ricciscalar = ricciscalar
 
