@@ -196,7 +196,7 @@ class Metric():
         if retR:
             return ricciscalar
 
-    def covariant_partial(self, retP=True):
+    def covariant_partial(self, retC=True):
         """A general co-/contravariant derivative has the form
         partial = a*partial_0 + b*partial_1 + c*partial_2 + d*partial_3
         for some constants a,b,c,d. For the partial derivative with covariant index we simply get
@@ -218,37 +218,37 @@ class Metric():
 
         parameter
         ---------
-        retP : bool
+        retC : bool
             if True the function will return the covariant partial
 
         return
         ------
-        covariantpartial : sympy matrix (if retP=True)
+        covariantpartial : sympy matrix (if retC=True)
         """
 
         covariantpartial = sy.matrices.eye(self.dim)
         self.covariantpartial = covariantpartial
 
-        if retP:
+        if retC:
             return covariantpartial
 
-    def contravariant_partial(self, retP=True):
+    def contravariant_partial(self, retC=True):
         """Using the format from covariant_partial, the contravariant partial is simply given by the inverse metric itself!
 
         parameter
         ---------
-        retP : bool
+        retC : bool
             if True the function will return the contravariant partial
 
         return
         ------
-        contravariantpartial : sympy matrix (if retP=True)
+        contravariantpartial : sympy matrix (if retC=True)
         """
 
         contravariantpartial = self.inv_metric
         self.contravariantpartial = contravariantpartial
 
-        if retP:
+        if retC:
             return contravariantpartial
 
 class MinkowskiMetric(Metric):
