@@ -11,6 +11,7 @@ Given the covariant metric tensor the following objects can be calculated automa
 - Christoffel symbols
 - Ricci tensor
 - Ricci scalar
+
 Predefined objects:
 - Minkowski metric
 - Schwarzschild metric

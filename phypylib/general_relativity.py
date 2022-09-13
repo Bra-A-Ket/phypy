@@ -68,7 +68,7 @@ class Metric():
 
         return deriv
 
-    def christoffel_symbols(self, retC=True):
+    def christoffel_symbols(self, retC=True, simplify=True):
         """Calculation of all Christoffel symbols
 
         parameter
@@ -97,6 +97,11 @@ class Metric():
                         second_deriv = self.diff_metric(i, a, j)
                         third_deriv = self.diff_metric(i, j, a)
                         all_symbols[k][i, j] += self.inv_metric[k, a] * (first_deriv + second_deriv - third_deriv) / 2
+
+        # simplify if needed
+        if simplify:
+            for i in range(self.dim):
+                all_symbols[i] = sy.simplify(all_symbols[i])
 
         # assign them to the class depending on self.dim
         if self.dim == 2:
@@ -136,7 +141,7 @@ class Metric():
         try:
             self.c0
         except:
-            self.christoffel_symbols(retC=False)
+            self.christoffel_symbols(retC=False, simplify=False)
 
         # calculate Ricci tensor R_{ac}=R^d_{adc}
         riccitensor = sy.matrices.zeros(self.dim)
@@ -175,7 +180,7 @@ class Metric():
         try:
             self.riccitensor
         except:
-            self.ricci_tensor(retR=False)
+            self.ricci_tensor(retR=False, simplify=False)
 
         # calculate the Ricci scalar
         ricciscalar = 0

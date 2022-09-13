@@ -15,9 +15,8 @@ def main():
 
 
     schwarzschild_metric = SchwarzschildMetric()
-    #schwarzschild_metric.christoffel_symbols(retC=False)
-    schwarzschild_metric.ricci_scalar(retR=False)
-    print(schwarzschild_metric.riccitensor)
+    schwarzschild_metric.christoffel_symbols(retC=False, simplify=False)
+    print(schwarzschild_metric.c0)
     """
     t, x, y, z = sy.symbols("t x y z", real=True)
     N = sy.Function("N")(t, x, y, z)
