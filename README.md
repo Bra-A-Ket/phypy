@@ -17,6 +17,9 @@ Predefined objects:
 - Minkowski metric
 - Schwarzschild metric
 - Friedmann-Robertson-Walker metric
+### Quantum Field Theory
+If no metric is specified the Minkowski metric is assumed.
+- Minimal coupled Klein-Gordon equation in the background of a given GR metric
 ## Requirements
 In order to make phypy work, one has to install some external packages.
 - numpy for obvious reasons
@@ -59,4 +62,11 @@ print(metric.ricciscalar)
 metric = FRWMetric()
 ricciscalar = metric.ricci_scalar(retR=True, simplify=True)
 print(ricciscalar)
+```
+### Example 4: Klein-Gordon equation in FRW metric
+```python
+name = "phi"
+phi = RealScalarField4D(name=name, metric=FRWMetric())
+kg = phi.klein_gordon(retK=True, simplify=True, latex=False)
+print(kg)
 ```
