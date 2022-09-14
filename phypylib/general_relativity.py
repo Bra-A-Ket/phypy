@@ -27,8 +27,10 @@ class Metric():
         self.dim = shape[0]                                                             # dimension of spacetime
         self.matrix = matrix                                                            # numpy-matrix of the metric tensor
         self.metric = sy.matrices.Matrix([col for col in matrix])                       # sympy-matrix of the metric tensor
+        self.metrictensor = sy.Array([col for col in matrix])                           # metric tensor in tensor-like format
         self.g = self.metric.det()                                                      # determinant of metric tensor
         self.inv_metric = self.metric.inv()                                             # inverse metric (sympy)
+        self.inv_metrictensor = sy.Array(self.inv_metric)                               # inverse metric (tensor-like)
         self.t = t                                                                      # time coordinate
         self.x = x                                                                      # first space coordinate
         self.y = y                                                                      # second space coordinate

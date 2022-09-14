@@ -16,7 +16,7 @@ class Field():
 
 
 class RealScalarField4D(Field):
-    def __init__(self, name, m=sy.symbols("m", real=True)):
+    def __init__(self, name, m=sy.symbols("m", real=True), metric=MinkowskiMetric()):
         try:
             isinstance(name, str)
         except:
@@ -24,31 +24,51 @@ class RealScalarField4D(Field):
 
         self.m = m
         self.fieldtype = "4-dim real scalar field"
-        t, x, y, z = sy.symbols("t x y z", real=True)
+        self.metric = metric
+        t = self.metric.t
+        x = self.metric.x
+        y = self.metric.y
+        z = self.metric.z
+        self.t = t
+        self.x = x
+        self.y = y
+        self.z = z
+        self.coords = self.metric.coords
         field = sy.Function(name, real=True)(t, x, y, z)
         super(RealScalarField4D, self).__init__(field=field, x=x, y=y, z=z, t=t)
 
-    def klein_gordon(self, metric=MinkowskiMetric(), retK=True, simplify=True, latex=False):
-        covariantpartial = metric.covariant_partial(retC=True)
-        contravariantpartial = metric.contravariant_partial(retC=True)
+    def gr_covariant_derivative(self, retG=True, simplify=True, latex=False):
+        covariantpartial = self.metric.covariant_partial(retC=True)
+        contravariantpartial = self.metric.contravariant_partial(retC=True)
 
-        # dynamic part {nabla_mu*nabla^mu field}
+        # dalembert acting on phi
         dalembert = 0
         for i in range(self.dim):
             for j in range(self.dim):
                 dalembert += sy.diff(contravariantpartial[i, j]*sy.diff(self.field, self.coords[j]), self.coords[i])
         if simplify:
             dalembert = sy.simplify(dalembert)
-        self.dalembert = dalembert
 
-        kleingordon = self.dalembert + self.m**2*self.field
-        metric.christoffel_symbols(retC=False)
+        # correction term from Christoffel symbols
+        self.metric.christoffel_symbols(retC=False)
         for i in range(self.dim):
             for j in range(self.dim):
-                kleingordon += metric.cs[i][i, j] * contravariantpartial[i, j] * sy.diff(self.field, self.coords[j])
+                dalembert += self.metric.cs[i][i, j] * contravariantpartial[i, j] * sy.diff(self.field, self.coords[j])
 
         if simplify:
-            kleingordon = sy.simplify(kleingordon)
+            dalembert = sy.simplify(dalembert)
+        self.dalembert = dalembert
+
+        if latex:
+            sy.print_latex(dalembert)
+
+        if retG:
+            return dalembert
+
+    def klein_gordon(self, retK=True, simplify=True, latex=False):
+        self.gr_covariant_derivative(retG=False, simplify=simplify, latex=False)
+
+        kleingordon = self.dalembert + self.m**2*self.field
         self.kleingordon = kleingordon
 
         if latex:
