@@ -78,6 +78,9 @@ class Metric():
         retC : bool
             if True the list of Christoffel symbols all_symbols will be returned
 
+        simplify : bool
+            if True the sympy.simplify function is used
+
         return
         ------
         all_symbols : list (if retC=True)
@@ -133,6 +136,9 @@ class Metric():
         retR : bool
             if True the function will return the Ricci tensor
 
+        simplify : bool
+            if True the sympy.simplify function is used
+
         return
         ------
         riccitensor : matrix (if retR=True)
@@ -171,6 +177,9 @@ class Metric():
         ---------
         retR : bool
             if True the function will return the Ricci scalar
+
+        simplify : bool
+            if True the sympy.simplify function is used
 
         return
         ------

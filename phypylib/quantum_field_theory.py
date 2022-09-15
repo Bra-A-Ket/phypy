@@ -16,28 +16,57 @@ class Field():
 
 
 class RealScalarField4D(Field):
+    """Real scalar field in 4 spacetime dimensions.
+
+    parameter
+    ---------
+    name : string
+        name of the field
+
+    m : sympy symbol
+        symbol for the mass term. Can also be set m=0
+
+    metric : spacetime metric from general_relativity.Metric()
+        specified metric of spacetime
+
+    # TODO: 3- and 2-dim realscalarfield using this class -> edit MinkowskiMetric()
+    """
+
     def __init__(self, name, m=sy.symbols("m", real=True), metric=MinkowskiMetric()):
         try:
             isinstance(name, str)
         except:
             sys.exit("RealScalarField4D: name variable is a string")
 
-        self.m = m
-        self.fieldtype = "4-dim real scalar field"
-        self.metric = metric
+        self.m = m                                                                      # mass term
+        self.fieldtype = "4-dim real scalar field"                                      # field type
+        self.metric = metric                                                            # metric
         t = self.metric.t
         x = self.metric.x
         y = self.metric.y
         z = self.metric.z
-        self.t = t
-        self.x = x
-        self.y = y
-        self.z = z
-        self.coords = self.metric.coords
         field = sy.Function(name, real=True)(t, x, y, z)
         super(RealScalarField4D, self).__init__(field=field, x=x, y=y, z=z, t=t)
 
-    def gr_covariant_derivative(self, retG=True, simplify=True, latex=False):
+    def gr_dalembert_operator(self, retG=True, simplify=True, latex=False):
+        """Calculates the d'Alembert operator acting on the field Nabla_mu*Nabla^mu*field for a given metric.
+
+        parameter
+        ---------
+        retG : bool
+            if True the result is returned
+
+        simplify : bool
+            if True the sympy.simplify function is used
+
+        latex : bool
+            if True the result will be printed in latex format
+
+        return
+        ------
+        dalembert
+        """
+
         covariantpartial = self.metric.covariant_partial(retC=True)
         contravariantpartial = self.metric.contravariant_partial(retC=True)
 
@@ -66,7 +95,26 @@ class RealScalarField4D(Field):
             return dalembert
 
     def klein_gordon(self, retK=True, simplify=True, latex=False):
-        self.gr_covariant_derivative(retG=False, simplify=simplify, latex=False)
+        """Calculate the Klein-Gordon equation for a massive real scalar field in 4D using the given metric by initializing
+        the field.
+
+        parameter
+        ---------
+        retK : bool
+            if True the result is returned
+
+        simplify : bool
+            if True the sympy.simplify function is used
+
+        latex : bool
+            if True the result will be printed in latex format
+
+        return
+        ------
+        kleingordon
+            how to read: 0 = kleingordon
+        """
+        self.gr_dalembert_operator(retG=False, simplify=simplify, latex=False)
 
         kleingordon = self.dalembert + self.m**2*self.field
         self.kleingordon = kleingordon
