@@ -20,6 +20,7 @@ Predefined objects:
 ### Quantum Field Theory
 If no metric is specified the Minkowski metric is assumed.
 - Minimal coupled Klein-Gordon equation in the background of a given GR metric
+- Wick contractions
 ## Requirements
 In order to make phypy work, one has to install some external packages.
 - numpy for obvious reasons
@@ -70,3 +71,19 @@ phi = RealScalarField4D(name=name, metric=FRWMetric())
 kg = phi.klein_gordon(retK=True, simplify=True, latex=False)
 print(kg)
 ```
+### Example 5: Wick contractions
+Find all Wick contractions of <0|T phi_1 phi_2 phi_3 phi_3|0>.
+```python
+names = ["phi_1", "phi_2", "phi_3", "phi_3"]
+fields = [RealScalarField4D(name=name) for name in names]
+WickContraction(fields=fields)
+```
+The output looks like this:
+```console
+<0|T[1, 2, 3, 3]|0> =
+
+1 x [[1, 2], [3, 3]] +
+2 x [[1, 3], [2, 3]]
+```
+This should be read as: <0|T phi_1 phi_2 phi_3 phi_3|0> = 1x<0|T phi_1 phi_2|0><0|T phi_3 phi_3|0> + 2x<0|T phi_1 phi_3>
+<0|T phi_2 phi_3|0>.

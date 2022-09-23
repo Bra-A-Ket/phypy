@@ -1,9 +1,8 @@
 from imports import *
 
 def main():
-    name = "phi"
-    phi = RealScalarField4D(name=name, metric=FRWMetric())
-    kg = phi.klein_gordon(retK=True, simplify=True, latex=False)
-    print(kg)
+    names = ["phi_1", "phi_2", "phi_3", "phi_3"]
+    fields = [RealScalarField4D(name=name) for name in names]
+    WickContraction(fields=fields)
 if __name__ == "__main__":
     main()
