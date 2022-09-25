@@ -2,6 +2,8 @@ import numpy as np
 import sympy as sy
 import sys
 from phypylib.general_relativity import *
+from collections import Counter
+
 
 class Field():
     def __init__(self, field, x, y=None, z=None, t=None):
@@ -41,6 +43,7 @@ class RealScalarField4D(Field):
         self.m = m                                                                      # mass term
         self.fieldtype = "4-dim real scalar field"                                      # field type
         self.metric = metric                                                            # metric
+        self.name = name                                                                # name as string
         t = self.metric.t
         x = self.metric.x
         y = self.metric.y
@@ -124,3 +127,110 @@ class RealScalarField4D(Field):
 
         if retK:
             return kleingordon
+
+
+class WickContraction():
+    def __init__(self, fields, mode="console"):
+        # Check for even number of fields
+        if len(fields) % 2 != 0:
+            sys.exit("Wick contractions yields zero since an off number of fields were given.")
+        # Replace fields with integers and collect them in a list. E.g. ["phi_1", "phi_1", "phi_2", "phi_3"] yields
+        # [1, 1, 2, 3]
+        name_str_list = []                                                              # Create list of names as strings
+        for field in fields:
+            name_str_list.append(field.name)
+        field_indices = []                                                              # Create dict matching every entry
+        dict = {name_str_list[0]:1}                                                     # of name_str_list to the
+        index = 2                                                                       # corresponding number
+        for i in range(1, len(name_str_list)):
+            if name_str_list[i] not in dict.keys():
+                dict.update({name_str_list[i]:index})
+                index += 1
+        for name in name_str_list:                                                      # throw field-indices in a list
+            field_indices.append(dict[name])
+        self.field_indices = field_indices
+
+        self.contractions(field_indices=field_indices, mode=mode)
+
+    def contractions(self, field_indices, mode="console"):
+        index_list = [i for i in range(len(field_indices))]
+        res = self.pairgroup(index_list=index_list)
+        for i in range(len(res)):
+            for j in range(len(res[i])):
+                res[i][j] = field_indices[res[i][j]]
+
+        self.count_all_multiples(res=res)
+        self.output(mode=mode)
+
+    def pairgroup(self, index_list):
+        if len(index_list) == 2:
+            return [[index_list[0], index_list[1]]]
+        pairedList = []
+        startTupleList = self.get_start_tuples(index_list=index_list)
+        for i in range(len(startTupleList)):
+            res = self.pairgroup(startTupleList[i].friends)
+            for j in range(len(res)):
+                res2 = res[j]
+                comboList = []
+                comboList.extend(startTupleList[i].tuple)
+                comboList.extend(res2)
+                pairedList.append(comboList)
+        return pairedList
+
+    def get_start_tuples(self, index_list):
+        startTupleList = []
+        for tupleIndex in range(1, len(index_list)):
+            startTuple = [index_list[0], index_list[tupleIndex]]
+            missingNumsList = []
+            for missingTupleIndex in range(1, len(index_list)):
+                if not missingTupleIndex == tupleIndex:
+                    missingNumsList.append(index_list[missingTupleIndex])
+            tuple = TupleAndMissingFriends(tuple=startTuple, friends=missingNumsList)
+            startTupleList.append(tuple)
+        return startTupleList
+
+    def count_all_multiples(self, res):
+        pairedList = []
+        for pseudo in range(len(res)):
+            pairedList.append([])
+        for i in range(len(res)):
+            for j in range(0, len(res[i]), 2):
+                pairedList[i].append(res[i][j:j+2])
+
+        for item in pairedList:
+            item.sort(key = lambda x: ((x[0], x[1])))
+
+        stringList = []
+        for item in pairedList:
+            stringList.append("{}".format(item))
+        dic = Counter(stringList)
+        uniqueResSet = set(stringList)
+        uniqueResList = list(uniqueResSet)
+        multiplierList = []
+        for item in uniqueResList:
+            multiplier = dic[item]
+            multiplierList.append(multiplier)
+
+        multiplierList.reverse()
+        uniqueResList.reverse()
+
+        self.multiplierList = multiplierList
+        self.uniqueResList = uniqueResList
+
+    def output(self, mode="console"):
+        if mode == "console":
+            print("<0|T{}|0> =".format(self.field_indices))
+            print("")
+            for i in range(len(self.multiplierList)):
+                if i != len(self.multiplierList)-1:
+                    print("{} x {} +".format(self.multiplierList[i], self.uniqueResList[i]))
+                else:
+                    print("{} x {}".format(self.multiplierList[i], self.uniqueResList[i]))
+
+        else:
+            print("Else")
+
+class TupleAndMissingFriends():
+    def __init__(self, tuple, friends):
+        self.tuple = tuple
+        self.friends = friends

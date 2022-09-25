@@ -19,7 +19,7 @@ class Metric():
         """
 
         shape = matrix.shape
-        if len(shape) is not 2:
+        if len(shape) != 2:
             sys.exit("Dimension error: the metric tensor is a 2-dim matrix")
         if shape[0] is not shape[1]:
             sys.exit("Dimension error: the metric tensor is a square matrix")
