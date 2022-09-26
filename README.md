@@ -1,7 +1,9 @@
 # phypy
 A python library to automate certain calculations in physics
 ## Features
-Note that this is only a list of the available features and not a documentation. For examples, see below.
+Note that this is only a list of the available features and not a documentation. Some examples can be found below. For
+additional information visit the [Wiki](https://github.com/Bra-A-Ket/phypy/wiki).
+
 Note furthermore, that calculations can be done symbolically with the help of sympy.
 ### General Relativity
 The chosen sign convention is (+---).
