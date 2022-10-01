@@ -3,6 +3,7 @@ import sympy as sy
 import sys
 from phypylib.general_relativity import *
 from collections import Counter
+import ast
 
 
 class Field():
@@ -130,7 +131,7 @@ class RealScalarField4D(Field):
 
 
 class WickContraction():
-    def __init__(self, fields, mode="console"):
+    def __init__(self, fields, mode="console", ignore=None):
         # Check for even number of fields
         if len(fields) % 2 != 0:
             sys.exit("Wick contractions yields zero since an off number of fields were given.")
@@ -150,9 +151,9 @@ class WickContraction():
             field_indices.append(dict[name])
         self.field_indices = field_indices
 
-        self.contractions(field_indices=field_indices, mode=mode)
+        self.contractions(field_indices=field_indices, mode=mode, ignore=ignore)
 
-    def contractions(self, field_indices, mode="console"):
+    def contractions(self, field_indices, mode="console", ignore=None):
         index_list = [i for i in range(len(field_indices))]
         res = self.pairgroup(index_list=index_list)
         for i in range(len(res)):
@@ -160,7 +161,15 @@ class WickContraction():
                 res[i][j] = field_indices[res[i][j]]
 
         self.count_all_multiples(res=res)
-        self.output(mode=mode)
+
+        if ignore is None:
+            self.output(mode=mode)
+
+        elif ignore == "vac":
+            self.is_graph_connected()
+
+        else:
+            sys.exit("WickContraction: ignore does not support the value: " + ignore)
 
     def pairgroup(self, index_list):
         if len(index_list) == 2:
@@ -229,6 +238,12 @@ class WickContraction():
 
         else:
             print("Else")
+
+    def is_graph_connected(self):
+        for graph_str in self.uniqueResList:
+            graph = ast.literal_eval(graph_str)                                         # string to list .. thats kinda silly
+            for tuple in graph:
+                pass # do stuff
 
 class TupleAndMissingFriends():
     def __init__(self, tuple, friends):

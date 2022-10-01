@@ -293,3 +293,25 @@ class FRWMetric(Metric):
             [0, 0, 0, -a**2*r**2*sy.sin(theta)**2]
         ])
         super(FRWMetric, self).__init__(matrix=matrix, t=t, x=r, y=theta, z=phi)
+
+class GraviWave(Metric):
+    def __init__(self, Aplus=0.5, Across=0, omega=1, phi=0, psi=0):
+        t, x, y, z = sy.symbols("t x y z", real=True)
+        matrix = np.array([
+            [1, 0, 0, 0],
+            [0, -(1+Aplus*sy.cos(omega*t + phi)), Across*sy.cos(omega*t + psi), 0],
+            [0, Across*sy.cos(omega*t + psi), -(1-Aplus*sy.cos(omega*t + phi)), 0],
+            [0, 0, 0, -1]
+        ])
+        self.Aplus = Aplus
+        self.Across = Across
+        self.omega = omega
+        self.phi = phi
+        self.psi = psi
+        super(GraviWave, self).__init__(matrix=matrix, t=t, x=x, y=y, z=z)
+
+
+    def infinitesimal_distance(self, t, x, y, z):
+        spatial_dist = x**2 + y**2 + z**2 + self.Aplus*np.cos(self.omega*t + self.phi)*(x**2 - y**2) +\
+            2*self.Across*np.cos(self.omega*t + self.psi)*x*y
+        return spatial_dist
