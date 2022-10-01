@@ -12,11 +12,11 @@ def main():
     T = 5*2*np.pi / omega
 
     # plotting
-    graviwave = GraviWave(Aplus=Aplus, Across=Across, omega=omega, phi=phi, psi=psi)
+    graviwave = GraviWave()
     x = np.linspace(-5, 5, N)
     y = np.linspace(-5, 5, N)
     X, Y = np.meshgrid(x, y)
-    Z = graviwave.infinitesimal_distance(t=0, x=X, y=Y, z=0)
+    Z = graviwave.infinitesimal_distance(t=0, x=X, y=Y, z=0, Aplus=Aplus, Across=Across, omega=omega, phi=phi, psi=psi)
 
     fig = plt.figure()
     ax = fig.add_subplot(111, aspect="equal")
@@ -28,7 +28,7 @@ def main():
 
     def update(val):
         t = tSlider.val
-        Z = graviwave.infinitesimal_distance(t=t, x=X, y=Y, z=0)
+        Z = graviwave.infinitesimal_distance(t=t, x=X, y=Y, z=0, Aplus=Aplus, Across=Across, omega=omega, phi=phi, psi=psi)
         ax.cla()
         ax.contour(X, Y, Z, levels=[level])
         fig.canvas.draw_idle()

@@ -295,9 +295,25 @@ class FRWMetric(Metric):
         super(FRWMetric, self).__init__(matrix=matrix, t=t, x=r, y=theta, z=phi)
 
 class GraviWave(Metric):
-    def __init__(self, Aplus=0.5, Across=0, omega=1, phi=0, psi=0):
+    def __init__(self):
         """Initialize a gravitational wave as a linear correction around Minkowski metric which solves the homogeneous
         linearized Einstein field equations in the TT gauge while propagating in z-direction.
+        """
+
+        t, x, y, z = sy.symbols("t x y z", real=True)
+        Aplus, Across, omega, phi, psi = sy.symbols("A_+ A_x w phi psi")
+        matrix = np.array([
+            [1, 0, 0, 0],
+            [0, -(1+Aplus*sy.cos(omega*t + phi)), Across*sy.cos(omega*t + psi), 0],
+            [0, Across*sy.cos(omega*t + psi), -(1-Aplus*sy.cos(omega*t + phi)), 0],
+            [0, 0, 0, -1]
+        ])
+        super(GraviWave, self).__init__(matrix=matrix, t=t, x=x, y=y, z=z)
+
+    def infinitesimal_distance(self, t, x, y, z, Aplus, Across, omega, phi, psi):
+        """t-lines with (x,y,z)=const. are geodesics in first order of perturbation. This function calculates the spatial
+        distance of two neighbouring geodesics, (x^i - 0), which is assumed to be so small that the metric tensor is constant
+        between those geodesics.
 
         parameter
         ---------
@@ -312,30 +328,11 @@ class GraviWave(Metric):
 
         phi, psi : float
             complex phases of the plus, cross mode, respectively
+
+        t, x, y, z : float
+            spacetime coordinates
         """
 
-        t, x, y, z = sy.symbols("t x y z", real=True)
-        matrix = np.array([
-            [1, 0, 0, 0],
-            [0, -(1+Aplus*sy.cos(omega*t + phi)), Across*sy.cos(omega*t + psi), 0],
-            [0, Across*sy.cos(omega*t + psi), -(1-Aplus*sy.cos(omega*t + phi)), 0],
-            [0, 0, 0, -1]
-        ])
-        self.Aplus = Aplus
-        self.Across = Across
-        self.omega = omega
-        self.phi = phi
-        self.psi = psi
-        super(GraviWave, self).__init__(matrix=matrix, t=t, x=x, y=y, z=z)
-
-
-    def infinitesimal_distance(self, t, x, y, z):
-        """t-lines with (x,y,z)=const. are geodesics in first order of perturbation. This function calculates the spatial
-        distance of two neighbouring geodesics, (x^i - 0), which is assumed to be so small that the metric tensor is constant
-        between those geodesics.
-        """
-        
-        spatial_dist = x**2 + y**2 + z**2 + self.Aplus*np.cos(self.omega*t + self.phi)*(x**2 - y**2) +\
-            2*self.Across*np.cos(self.omega*t + self.psi)*x*y
+        spatial_dist = x**2 + y**2 + z**2 + Aplus*np.cos(omega*t + phi)*(x**2 - y**2) + 2*Across*np.cos(omega*t + psi)*x*y
 
         return spatial_dist
