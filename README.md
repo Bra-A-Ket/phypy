@@ -14,11 +14,13 @@ Given the covariant metric tensor the following objects can be calculated automa
 - Ricci tensor
 - Ricci scalar
 - co- and contravariant partial derivative (partial_mu / partial^mu)
+- Visualization of the polarization modes of the gravitational wave in first order of perturbation
 
 Predefined objects:
 - Minkowski metric
 - Schwarzschild metric
 - Friedmann-Robertson-Walker metric
+- gravitational wave, infinitesimal spatial distance between neighbouring geodesics
 ### Quantum Field Theory
 If no metric is specified the Minkowski metric is assumed.
 - Minimal coupled Klein-Gordon equation in the background of a given GR metric
@@ -32,6 +34,10 @@ python -m pip install numpy
 - sympy for symbolic calculations
 ```console
 python -m pip install sympy
+```
+- matplotlib for plotting
+```console
+python -m pip install matplotlib
 ```
 ## Usage
 Feel free to use any python file, e.g. calculations.py, and make sure that you have imported everything:
