@@ -237,7 +237,8 @@ class WickContraction():
                     print("{} x {}".format(self.multiplierList[i], self.uniqueResList[i]))
 
         else:
-            print("Else")
+            print(mode)
+
 
     def is_graph_connected(self):
         for graph_str in self.uniqueResList:
