@@ -3,7 +3,7 @@ from imports import *
 def main():
     # parameter
     Aplus = 0.5
-    Across = 0
+    Across = 0.1
     omega = 1
     phi = 0
     psi = 0
